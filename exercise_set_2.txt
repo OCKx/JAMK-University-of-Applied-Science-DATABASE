@@ -1,0 +1,68 @@
+====== Exercise 2 - SQL Basics 1 ======
+
+1 | Select customers where name begins with letter B and customerID is less than 10.
+--------------------------------------------------
+
+--------------------------------------------------
+
+##################################################
+2 | Select orders made in 18th of August 2023. Order the result set by order date in ascending order.
+--------------------------------------------------
+
+--------------------------------------------------
+
+##################################################
+3 | Select all different cities (no duplicates) where customers live with city name ending in letter N. Order the result set by city name in descending order. 
+--------------------------------------------------
+
+--------------------------------------------------
+
+##################################################
+4 | Select customer companies whose contact person's last name starts with the letter S and the country is either Spain or USA.
+--------------------------------------------------
+
+--------------------------------------------------
+
+##################################################
+5 | Select orderid and order date of orders that are missing an employee.
+--------------------------------------------------
+
+--------------------------------------------------
+
+##################################################
+6 | Select employees born in 1950s or 1980s.
+--------------------------------------------------
+
+--------------------------------------------------
+
+##################################################
+7 | Select orders with the following criteria:
+	- OrderID in range 10300 - 10350
+	- ProductID equal or lower than 40
+	- Quantity either 10, 20, 30 or 40
+Order the result set by quantity in descending order.
+--------------------------------------------------
+
+--------------------------------------------------
+
+##################################################
+8 | Select suppliers whose phone number meets the following criteria:
+	- there must be a pair of brackets () with two numbers between them
+	- dash character must be present somewhere in the phone number after the brackets
+--------------------------------------------------
+
+--------------------------------------------------
+
+##################################################
+9 | Select products with price being in range 20-40 (inclusive) and in addition, one of the following conditions should be met:
+	- categoryID being 2, 4 or 6
+	- product name starting with letter A
+--------------------------------------------------
+
+--------------------------------------------------
+
+##################################################
+10 | Select products whose unit is measured in either grams (g) or kilograms (kg) and both supplierid and categoryid are between 5 and 10 (inclusive).
+--------------------------------------------------
+
+--------------------------------------------------
