@@ -1,0 +1,86 @@
+====== Exercise 5 - SQL Basics 4 ======
+
+
+1 | Create a new table called departments with the following information:
+	- DepartmentID: Unique identifier for each department. It must be eight characters long and consist of four letters and four numbers (for example AABB0011).
+	- DepartmentName: Name of the department.
+	- Duty: Department responsibilities.
+	- Budget: Budget that is allocated to the department for a specific period.
+	- StartDate: The date when the department was established. 
+--------------------------------------------------
+
+--------------------------------------------------
+
+##################################################
+2 | Use a separate query to add a new column to departments table. Then connect employees table information with this table. Each department should
+have a manager who is chosen from among the employees. 
+--------------------------------------------------
+
+--------------------------------------------------
+
+##################################################
+3 | Add the following two new columns for departments table using a separate query:
+	- CreatedAt: This should be a column with date and time information indicating when the data was initially created.
+	- UpdatedAt: This should also contain a date and time information, but will be automatically updated when data in a row is updated. 
+--------------------------------------------------
+
+--------------------------------------------------
+
+##################################################
+4 | Add a department information to each of the employees so that each employee would belong to one department. 
+--------------------------------------------------
+
+--------------------------------------------------
+
+##################################################
+5 | Create a table called tasks with the following information:
+	- TaskID: Unique identifier for each task which is an integer that will be automatically created each time a new row is added to the table.
+	- TaskName: Name for the task.
+	- TaskDescription: A detailed description of the task. This field could contain a lot of information.
+	- StartDate: Start date for the task.
+	- EndDate: End date for the task.
+	- TaskStatus: This field should indicate the status of the task (for example "In progress", "Completed", "Pending").
+	- Priority: The priority level of the task (for example "High", "Medium", "Low"). 
+--------------------------------------------------
+
+--------------------------------------------------
+
+##################################################
+6 | Connect tasks table with the employee information so that each task would be dedicated to one employee. 
+--------------------------------------------------
+
+--------------------------------------------------
+
+##################################################
+7 | Create a new table called payment_methods with the following information
+	- PaymentMethodID: A unique identifier for each payment method.
+	- PaymentType: Type indicating what kind of payment method is used (Bank transfer, PayPal etc.).
+	- IsCreditCard: A boolean value describing whether the credit card is used for payment.
+	- CardType: This is an optional field for describing the credit card type (Visa, MasterCard etc.).
+	- ExpirationDate: This is also an optional field for the credit card expiration date.
+	- BillingAddress: Billing address associated with the payment.
+--------------------------------------------------
+
+--------------------------------------------------
+
+##################################################
+8 | Connect payment_methods table with orders table so that each order has a payment method set.
+--------------------------------------------------
+
+--------------------------------------------------
+
+##################################################
+9 | Create a trigger for the departments table that checks both of the following conditions:
+	- The new value for the budget field cannot exceed one million (this applies only for the new data, updated data can exceed one million).
+	- The length of the value to be inserted into the DepartmentID field must be exactly eight characters long.
+--------------------------------------------------
+
+--------------------------------------------------
+
+##################################################
+10 | Create a trigger for the tasks table that checks both of the following conditions:
+	- The value of EndDate field must not be in the past.
+	- Priority value must be one of the following: Low, Medium or High.
+--------------------------------------------------
+
+--------------------------------------------------

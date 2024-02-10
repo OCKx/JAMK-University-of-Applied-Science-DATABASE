@@ -1,0 +1,67 @@
+====== Exercise 4 - SQL Basics 3 ======
+
+
+1 | Present all products with productname, categoryname and product price included in the result set. Select also products without the category!
+--------------------------------------------------
+
+--------------------------------------------------
+
+##################################################
+2 | Select products having price higher than the average price of all products. Order the result set in descending order by price.
+--------------------------------------------------
+
+--------------------------------------------------
+
+##################################################
+3 | Select employees who have been processing at least two orders. Present employees full name in one column (for example "Emily Johnson") and amount of orders in the other. Use column names full_name and amount for these two columns. Order the result set by amount in descending order.
+--------------------------------------------------
+
+--------------------------------------------------
+
+##################################################
+4 | Count how many products each shipper has transferred. Product quantity must be taken into account! Present shippername in the result set.
+--------------------------------------------------
+
+--------------------------------------------------
+
+##################################################
+5 | Create the following two queries and combine them using the union statement.
+	- Select supplier names of suppliers having the price of their products lower than the average price of all products.
+	- Select supplier names of suppliers having contact name length higher than 12 characters.
+--------------------------------------------------
+
+--------------------------------------------------
+
+##################################################
+6 | Show the TOP 5 countries from which customers placed the most orders.
+--------------------------------------------------
+
+--------------------------------------------------
+
+##################################################
+7 | Use union to combine these queries:
+	* Select customers whose city and postalcode both appear in suppliers table.
+	* Select customers whose name is at most five characters shorter than the longest supplier name. 
+--------------------------------------------------
+
+--------------------------------------------------
+
+##################################################
+8 |  Create the following two queries and combine them using the union statement:
+	- Select customer names who have not made any orders.
+	- Select customer names who have ordered at least one product with product price over 100.
+--------------------------------------------------
+
+--------------------------------------------------
+
+##################################################
+9 | Present suppliers who have supplied 5 or more products and whose units of products it delivers can be measured in boxes. 
+--------------------------------------------------
+
+--------------------------------------------------
+
+##################################################
+10 | Present total price for each order. Include only orders with 5 or more products. Order the result set by order total price in descending order.
+--------------------------------------------------
+
+--------------------------------------------------
