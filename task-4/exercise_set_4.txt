@@ -3,25 +3,26 @@
 
 1 | Present all products with productname, categoryname and product price included in the result set. Select also products without the category!
 --------------------------------------------------
-
+SELECT ProductName, CategoryName, Price FROM products P LEFT JOIN categories C ON p.CategoryID = c.CategoryID;
 --------------------------------------------------
 
 ##################################################
 2 | Select products having price higher than the average price of all products. Order the result set in descending order by price.
 --------------------------------------------------
-
+SELECT * FROM products WHERE Price > (SELECT AVG(Price) FROM products) ORDER BY Price DESC;
 --------------------------------------------------
 
 ##################################################
 3 | Select employees who have been processing at least two orders. Present employees full name in one column (for example "Emily Johnson") and amount of orders in the other. Use column names full_name and amount for these two columns. Order the result set by amount in descending order.
 --------------------------------------------------
-
+SELECT CONCAT(e.LastName, ' ', e.FirstName) AS full_name, COUNT(o.orderid) AS amount FROM employees e JOIN orders o ON e.EmployeeID = o.EmployeeID GROUP BY e.EmployeeID HAVING amount >= 2 ORDER BY amount DESC;
 --------------------------------------------------
 
 ##################################################
 4 | Count how many products each shipper has transferred. Product quantity must be taken into account! Present shippername in the result set.
 --------------------------------------------------
-
+SELECT s.ShipperName, SUM(od.quantity) AS total_transferred_products FROM orders o
+JOIN orderdetails od ON o.OrderID = od.OrderID JOIN shippers s ON o.ShipperID = s.ShipperID GROUP BY s.ShipperName;
 --------------------------------------------------
 
 ##################################################
@@ -29,13 +30,15 @@
 	- Select supplier names of suppliers having the price of their products lower than the average price of all products.
 	- Select supplier names of suppliers having contact name length higher than 12 characters.
 --------------------------------------------------
-
+SELECT s.SupplierName FROM products p JOIN suppliers s ON S.SupplierID = p.supplierID WHERE p.price < (SELECT AVG(price) FROM products p)
+UNION
+SELECT SupplierName FROM suppliers WHERE LENGTH(contactname) > 12;
 --------------------------------------------------
 
 ##################################################
 6 | Show the TOP 5 countries from which customers placed the most orders.
 --------------------------------------------------
-
+SELECT c.Country FROM orders o JOIN customers c ON o.CustomerID = c.CustomerID GROUP BY C.Country ORDER BY COUNT(O.CustomerID) DESC LIMIT 5;
 --------------------------------------------------
 
 ##################################################
@@ -43,7 +46,10 @@
 	* Select customers whose city and postalcode both appear in suppliers table.
 	* Select customers whose name is at most five characters shorter than the longest supplier name. 
 --------------------------------------------------
-
+SELECT * FROM Customers c JOIN suppliers s ON s.City = c.City AND s.PostalCode = c.PostalCode
+UNION
+SELECT * FROM customers c JOIN suppliers s ON s.City = c.City
+WHERE LENGTH(c.ContactName) <= (SELECT MAX(LENGTH(c.ContactName)) - 5 FROM suppliers);
 --------------------------------------------------
 
 ##################################################
@@ -51,17 +57,24 @@
 	- Select customer names who have not made any orders.
 	- Select customer names who have ordered at least one product with product price over 100.
 --------------------------------------------------
-
+SELECT ContactName FROM orders o RIGHT JOIN customers c ON c.CustomerID = o.CustomerID WHERE o.CustomerID IS NULL
+UNION
+SELECT DISTINCT c.ContactName FROM orderdetails od
+JOIN orders o ON o.OrderID = od.OrderID JOIN customers c ON c.CustomerID = o.CustomerID JOIN products p ON od.ProductID = p.ProductID 
+WHERE od.ProductID >= 1 AND p.Price > 100;
 --------------------------------------------------
 
 ##################################################
 9 | Present suppliers who have supplied 5 or more products and whose units of products it delivers can be measured in boxes. 
 --------------------------------------------------
-
+SELECT DISTINCT s.SupplierName, s.ContactName, p.SupplierID FROM suppliers s JOIN products p ON s.SupplierID = p.SupplierID WHERE p.Unit LIKE '%boxes%' 
+GROUP BY s.SupplierID HAVING COUNT(p.ProductID) >= 5;
 --------------------------------------------------
 
 ##################################################
 10 | Present total price for each order. Include only orders with 5 or more products. Order the result set by order total price in descending order.
 --------------------------------------------------
-
+SELECT o.OrderID, SUM(p.Price) AS total_price FROM orderdetails od 
+JOIN products p ON p.ProductID = od.ProductID JOIN orders o ON o.OrderID = od.OrderID GROUP BY o.OrderID
+HAVING COUNT(od.ProductID) >= 5 ORDER BY total_price DESC;
 --------------------------------------------------
