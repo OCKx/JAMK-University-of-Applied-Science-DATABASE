@@ -8,14 +8,25 @@
 	- Budget: Budget that is allocated to the department for a specific period.
 	- StartDate: The date when the department was established. 
 --------------------------------------------------
-
+CREATE TABLE Departments (
+    DepartmentID CHAR(8) PRIMARY KEY,
+    DepartmentName VARCHAR(50),
+    Duty VARCHAR(50),
+    Budget DECIMAL(10, 2),
+    StartDate DATE
+);
 --------------------------------------------------
 
 ##################################################
 2 | Use a separate query to add a new column to departments table. Then connect employees table information with this table. Each department should
 have a manager who is chosen from among the employees. 
 --------------------------------------------------
+ALTER TABLE departments
+ADD COLUMN ManagerID INT;
 
+UPDATE departments d
+JOIN employees e ON d.DepartmentID = e.DepartmentID
+SET d.ManagerID = e.EmployeeID;
 --------------------------------------------------
 
 ##################################################
@@ -23,13 +34,19 @@ have a manager who is chosen from among the employees.
 	- CreatedAt: This should be a column with date and time information indicating when the data was initially created.
 	- UpdatedAt: This should also contain a date and time information, but will be automatically updated when data in a row is updated. 
 --------------------------------------------------
+alter table departments
+add column CreatedAt datetime;
 
+alter table departments
+add column UpdatedAt datetime on update current_timestamp;
 --------------------------------------------------
 
 ##################################################
 4 | Add a department information to each of the employees so that each employee would belong to one department. 
 --------------------------------------------------
-
+ALTER TABLE employees
+ADD COLUMN departmentID CHAR(8),
+ADD CONSTRAINT fk_departmentID FOREIGN KEY (departmentID) REFERENCES departments(DepartmentID);
 --------------------------------------------------
 
 ##################################################
@@ -42,13 +59,23 @@ have a manager who is chosen from among the employees.
 	- TaskStatus: This field should indicate the status of the task (for example "In progress", "Completed", "Pending").
 	- Priority: The priority level of the task (for example "High", "Medium", "Low"). 
 --------------------------------------------------
-
+CREATE TABLE tasks (
+    TaskID INT AUTO_INCREMENT PRIMARY KEY,
+    TaskName VARCHAR(50),
+    TaskDescription TEXT,
+    StartDate DATE,
+    EndDate DATE,
+    TaskStatus ENUM('In progress', 'Completed', 'Pending'),
+    Priority ENUM('High', 'Medium', 'Low')
+);
 --------------------------------------------------
 
 ##################################################
 6 | Connect tasks table with the employee information so that each task would be dedicated to one employee. 
 --------------------------------------------------
-
+ALTER TABLE tasks
+ADD COLUMN EmployeeID INT,
+ADD CONSTRAINT fk_EmployeeID FOREIGN KEY (EmployeeID) REFERENCES employees(EmployeeID);
 --------------------------------------------------
 
 ##################################################
@@ -60,13 +87,23 @@ have a manager who is chosen from among the employees.
 	- ExpirationDate: This is also an optional field for the credit card expiration date.
 	- BillingAddress: Billing address associated with the payment.
 --------------------------------------------------
+CREATE TABLE payment_methods (
+    PaymentMethodID INT PRIMARY KEY AUTO_INCREMENT,
+    PaymentType ENUM('Bank transfer', 'PayPal', 'Credit card', 'Debit card') NOT NULL,
+    IsCreditCard BOOLEAN NOT NULL,
+    CardType ENUM('Visa', 'MasterCard', 'Verve'),
+    ExpirationDate DATE,
+    BillingAddress VARCHAR(200) NOT NULL
+);
 
 --------------------------------------------------
 
 ##################################################
 8 | Connect payment_methods table with orders table so that each order has a payment method set.
 --------------------------------------------------
-
+ALTER TABLE orders
+ADD COLUMN PaymentMethodID INT,
+ADD CONSTRAINT fk_PaymentMethodID FOREIGN KEY (PaymentMethodID) REFERENCES payment_methods(PaymentMethodID);
 --------------------------------------------------
 
 ##################################################
@@ -74,7 +111,21 @@ have a manager who is chosen from among the employees.
 	- The new value for the budget field cannot exceed one million (this applies only for the new data, updated data can exceed one million).
 	- The length of the value to be inserted into the DepartmentID field must be exactly eight characters long.
 --------------------------------------------------
+DELIMITER $$
 
+CREATE TRIGGER check_department_insert BEFORE INSERT ON departments
+FOR EACH ROW
+BEGIN
+    IF NEW.Budget > 1000000 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Budget cannot exceed 1,000,000';
+    END IF;
+    
+    IF LENGTH(NEW.DepartmentID) != 8 THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'DepartmentID must be exactly eight characters long';
+    END IF;
+END $$
 --------------------------------------------------
 
 ##################################################
@@ -82,5 +133,20 @@ have a manager who is chosen from among the employees.
 	- The value of EndDate field must not be in the past.
 	- Priority value must be one of the following: Low, Medium or High.
 --------------------------------------------------
+DELIMITER $$
 
+CREATE TRIGGER check_task_insert 
+BEFORE INSERT ON tasks
+FOR EACH ROW
+BEGIN
+    IF NEW.EndDate < CURRENT_DATE THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'EndDate must not be in the past';
+    END IF;
+
+    IF NEW.Priority NOT IN ('Low', 'Medium', 'High') THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Priority must be either Low, Medium, or High';
+    END IF;
+END $$
 --------------------------------------------------

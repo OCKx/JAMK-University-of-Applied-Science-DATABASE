@@ -6,7 +6,11 @@
 	- ID: AABB0002, Name: South, Duty: Marketing, Budget: 400000, Start date: 2018-02-22, Manager: Steven Buchanan, Created: use today's date
 	- ID: AACC0003, Name: West, Duty: Management, Budget: 800000, Start date: 2018-01-12, Manager: Janet Leverling, Created: use today's date
 --------------------------------------------------
-
+INSERT INTO departments (DepartmentID, DepartmentName, Duty, Budget, StartDate, ManagerID, CreatedAt)
+VALUES 
+    ('AAAA0001', 'North', 'Accounting', 200000, '2018-02-02', (select employeeID from employees where FirstName = 'William' and LastName = 'Brown'), CURDATE()),
+    ('AABB0002', 'South', 'Marketing', 400000, '2018-02-22', (select employeeID from employees where FirstName = 'Steven' and LastName = 'Buchanan'), CURDATE()),
+    ('AACC0003', 'West', 'Management', 800000, '2018-01-12', (select employeeID from employees where FirstName = 'Janet' and LastName = 'Leverling'), CURDATE());
 --------------------------------------------------
 
 ##################################################
@@ -15,7 +19,11 @@
         - Name: Social Media Campaign, Description: Plan and execute a social media marketing campaign, Start date: 2024-02-10, End date: 2024-06-28, Status: Pending, Priority: Medium, Employee: Michael Suyama
 	- Name: Strategic Planning, Description: Develop a strategic plan for the upcoming quarter, Start date: 2024-06-01, End date: 2024-07-20, Status: Not Started, Priority: High, Employee: Anna Davis
 --------------------------------------------------
-
+INSERT INTO tasks (TaskName, TaskDescription, StartDate, EndDate, TaskStatus, Priority, EmployeeID)
+VALUES 
+    ('Financial Report Analysis', 'Analyze and prepare financial reports for Q1', '2024-02-01', '2024-05-15', 'In Progress', 'High', (SELECT EmployeeID FROM employees WHERE FirstName = 'John' AND LastName = 'Smith')),
+    ('Social Media Campaign', 'Plan and execute a social media marketing campaign', '2024-02-10', '2024-06-28', 'Pending', 'Medium', (SELECT EmployeeID FROM employees WHERE FirstName = 'Michael' AND LastName = 'Suyama')),
+    ('Strategic Planning', 'Develop a strategic plan for the upcoming quarter', '2024-06-01', '2024-07-20', NULL, 'High', (SELECT EmployeeID FROM employees WHERE FirstName = 'Anna' AND LastName = 'Davis'));
 --------------------------------------------------
 
 ##################################################
@@ -24,47 +32,70 @@
 	- Payment type: PayPal, Is credit card: No, Card type: No value, Expiration date: No value, Billing address: 202 Elm St Countryside
 	- Payment type: Debit card, Is credit card: Yes, Card type: MasterCard, Expiration date: 2025-10-10, Billing address: 789 Pine St Villagetown
 --------------------------------------------------
-
+INSERT INTO payment_methods (PaymentType, IsCreditCard, CardType, ExpirationDate, BillingAddress) 
+VALUES 
+    ('Credit card', true, 'Visa', '2024-12-31', '123 Main St Cityville'),
+    ('PayPal', false, NULL, NULL, '202 Elm St Countryside'),
+    ('Debit card', true, 'MasterCard', '2025-10-10', '789 Pine St Villagetown');
 --------------------------------------------------
 
 ##################################################
 4 | Employees Anne Dodsworth, Emily Johnson and Andrew Fuller are working in marketing. Add them to the corresponding department. 
 --------------------------------------------------
-
+UPDATE employees
+SET DepartmentID = 'AABB0002'
+WHERE FirstName IN ('Anne', 'Emily', 'Andrew')
+AND LastName IN ('Dodsworth', 'Johnson', 'Fuller');
 --------------------------------------------------
 
 ##################################################
 5 | Update order information for customerID 10 (Bottom-Dollar Marketse) so that it was paid with credit card (Billing address 123 Main St Cityville).
 --------------------------------------------------
-
+UPDATE orders
+SET PaymentMethodID = (
+    SELECT PaymentMethodID
+    FROM payment_methods
+    WHERE PaymentType = 'Credit card'
+    AND BillingAddress = '123 Main St Cityville'
+)
+WHERE CustomerID = 10;
 --------------------------------------------------
 
 ##################################################
 6 | Anna Davis was able to start her task 'Strategic Planning' at last so set the task status to be "In progress" and start date to be today's date. 
 --------------------------------------------------
-
+UPDATE tasks
+SET TaskStatus = 'In progress',
+    StartDate = CURDATE()
+WHERE TaskName = 'Strategic Planning'
+  AND EmployeeID = (SELECT EmployeeID FROM employees WHERE FirstName = 'Anna' AND LastName = 'Davis');
 --------------------------------------------------
 
 ##################################################
 7 | The company plans to significantly boost marketing for the coming year so double the marketing budget.
 --------------------------------------------------
-
+update departments
+set budget = budget * 2 where duty = 'marketing';
 --------------------------------------------------
 
 ##################################################
 8 | Create a copy of the orders table. The new table should be called orders_backup.
 --------------------------------------------------
-
+CREATE TABLE orders_backup LIKE orders;
 --------------------------------------------------
 
 ##################################################
 9 | Copy the data from orders table into the newly created orders_backup table. Move orders created starting from date 2023-08-18.
 --------------------------------------------------
-
+insert into orders_backup
+select * from orders where OrderDate >= '2023-08-18';
 --------------------------------------------------
 
 ##################################################
 10 | Remove all orders from the orders_backup table without employee if the order was shipped by Swift Shipping or Speedy Express. 
 --------------------------------------------------
-
+DELETE FROM orders_backup
+WHERE ShipperID IN (
+    SELECT ShipperID FROM shippers WHERE ShipperName IN ('Swift Shipping', 'Speedy Express')
+) AND EmployeeID IS NULL;
 --------------------------------------------------

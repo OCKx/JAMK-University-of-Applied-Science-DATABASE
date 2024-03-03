@@ -9,3 +9,10 @@ Design a database for the exhibitions where exhibitors can present their product
 Exhibitors will register their unique IDs and provide essential details including company and contact information. Exhibitors will present products which should also be stored to the database. Each product will have a name, description and product category.
 
 Exhibition visitors are uniquely identified by their name, organization and contact details. Visitors should also have an opportunity to give a review of the exhibition they attended using a five-star rating.
+
+
+# My Grade
+## 9.00/10.00
+
+## Feedback
+Your database model has most of the required information included, but exhibition itself is missing. Visitor shoudl review the exhibition, not particular exhibitor.
