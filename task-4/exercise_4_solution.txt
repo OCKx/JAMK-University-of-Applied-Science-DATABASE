@@ -1,0 +1,127 @@
+====== Exercise 4 - SQL Basics 3 ======
+
+1 | Present all products with productname, categoryname and product price included in the result set. Select also products without the category!
+--------------------------------------------------
+select productname, categoryname, price
+from products
+left join categories
+on products.CategoryID = categories.CategoryID;
+--------------------------------------------------
+
+##################################################
+2 | Select products having price higher than the average price of all products. Order the result set in descending order by price.
+--------------------------------------------------
+select *
+from products
+where price > (select avg(price)
+from products)
+order by price desc;
+--------------------------------------------------
+
+##################################################
+3 | Select employees who have been processing at least two orders. Present employees full name in one column (for example "Emily Johnson") and amount of orders in the other. Use column names full_name and amount for these two columns. Order the result set by amount in descending order.
+--------------------------------------------------
+select concat(firstname,' ',lastname) as fullname, count(*) as amount
+from employees join orders
+on orders.EmployeeID = employees.EmployeeID
+group by fullname
+having amount >= 2
+order by amount desc;
+--------------------------------------------------
+
+##################################################
+4 | Count how many products each shipper has transferred. Product quantity must be taken into account! Present shippername in the result set.
+--------------------------------------------------
+select shippername, sum(quantity) as product_amount
+from shippers join orders
+on shippers.ShipperID = orders.ShipperID
+join orderdetails
+on orders.OrderID = orderdetails.OrderID
+group by shippers.ShipperID;
+--------------------------------------------------
+
+##################################################
+5 | Create the following two queries and combine them using the union statement.
+	- Select supplier names of suppliers having the price of their products lower than the average price of all products.
+	- Select supplier names of suppliers having contact name length higher than 12 characters.
+--------------------------------------------------
+select suppliername
+from suppliers join products
+on suppliers.SupplierID = products.SupplierID
+where price < (select avg(price) from products)
+group by suppliers.SupplierName
+	union
+select suppliername
+from suppliers
+where length(contactname) > 12;
+--------------------------------------------------
+
+##################################################
+6 | Show the TOP 5 countries from which customers placed the most orders.
+--------------------------------------------------
+select country, count(*) as order_counts
+from customers join orders
+on customers.CustomerID = orders.CustomerID
+group by country
+order by order_counts desc
+limit 5;
+--------------------------------------------------
+
+##################################################
+7 | Use union to combine these queries:
+	* Select customers whose city and postalcode both appear in suppliers table.
+	* Select customers whose name is at most five characters shorter than the longest supplier name.
+--------------------------------------------------
+select * from customers
+where city in (select city from suppliers)
+and postalcode in (select postalcode from suppliers)
+	union
+select * from customers
+where (select max(length(suppliername)) from suppliers) - length(customername) <= 5;
+--------------------------------------------------
+
+##################################################
+8 | Create the following two queries and combine them using the union statement:
+	- Select customer names who have not made any orders.
+	- Select customer names who have ordered at least one product with product price over 100.
+--------------------------------------------------
+select customername
+from customers
+where customerid not in (select customerid from orders)
+	union
+select customername
+from customers join orders
+on customers.CustomerID = orders.CustomerID
+join orderdetails
+on orders.OrderID = orderdetails.OrderID
+join products
+on orderdetails.ProductID = products.ProductID
+where price > 100;
+--------------------------------------------------
+
+##################################################
+9 | Present suppliers who have supplied 5 or more products and whose units of products it delivers can be measured in boxes.
+--------------------------------------------------
+Important: 
+	- This query was incorrectly designed in the first place and this should not return any rows.
+	- As this exercise had error, all results will be accepted.
+	
+select *, count(*) as supplied_products
+from products
+join suppliers
+on suppliers.SupplierID = products.SupplierID
+where unit like '%box%'
+group by suppliers.supplierID
+having supplied_products >= 5;
+--------------------------------------------------
+
+##################################################
+10 | Present total price for each order. Include only orders with 5 or more products. Order the result set by order total price in descending order. 
+--------------------------------------------------
+select orderid, sum(price*quantity) as total_price, count(*) as product_quantity
+from products join orderdetails
+on products.ProductID = orderdetails.ProductID
+group by orderid
+having product_quantity >= 5
+order by total_price desc;
+--------------------------------------------------
