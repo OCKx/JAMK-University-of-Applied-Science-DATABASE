@@ -47,3 +47,23 @@ gain as one of their goals.
 f) Show TOP 3 exercise categories which have been logged the most.
 g) Determine the most common goal type among users who have achieved the '10 Workouts Streak'
 achievement.
+
+# My Grade
+## 34.00/40.00
+
+## Feedback
+- Database design [14/20p]: Collections table could be added with connection to photographers where photographers could add their photos. In addition, some of the attributes could be required fields (not null). Other than that your model looks OK!
+ 
+- Database structure and data [6/6p]: OK
+ 
+- Queries [14/14p]:
+
+Exercise OK
+
+Query 1: OK
+Query 2: OK
+Query 3: OK
+Query 4: OK
+Query 5: OK
+Query 6: OK
+Query 7: OK
